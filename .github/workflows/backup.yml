@@ -1,0 +1,94 @@
+name: Nightly backup
+
+# The portal runs on free tiers, and Supabase free has no point-in-time
+# recovery. A school losing a term of marks is a crisis, so this is the recovery
+# story: an encrypted dump pushed to storage on entirely different
+# infrastructure, every night, with 30 days of history.
+#
+# A backup sitting on the same account as the thing it protects is not a backup.
+
+on:
+  schedule:
+    # 01:30 UTC is 04:30 in Nairobi: after any late marking, before the school day.
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Install PostgreSQL 17 client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
+            --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] \
+            https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends postgresql-client-17
+
+      - name: Dump and encrypt
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          STAMP="$(date -u +%Y-%m-%d)"
+          echo "BACKUP_FILE=grace-portal-${STAMP}.sql.gz.gpg" >> "$GITHUB_ENV"
+
+          # --no-owner / --no-acl so the dump restores into a fresh project
+          # without fighting over Supabase-managed roles.
+          pg_dump "$SUPABASE_DB_URL" \
+            --no-owner --no-acl --clean --if-exists \
+            | gzip -9 \
+            | gpg --batch --yes --symmetric --cipher-algo AES256 \
+                  --passphrase "$BACKUP_PASSPHRASE" \
+                  --output "grace-portal-${STAMP}.sql.gz.gpg"
+
+          ls -lh "grace-portal-${STAMP}.sql.gz.gpg"
+
+      - name: Upload to Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          set -euo pipefail
+          aws s3 cp "$BACKUP_FILE" "s3://${R2_BUCKET}/db/${BACKUP_FILE}" \
+            --endpoint-url "$R2_ENDPOINT"
+
+      - name: Prune backups older than 30 days
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          set -euo pipefail
+          CUTOFF="$(date -u -d '30 days ago' +%Y-%m-%d)"
+          aws s3 ls "s3://${R2_BUCKET}/db/" --endpoint-url "$R2_ENDPOINT" \
+            | awk '{print $4}' | grep -E '^grace-portal-[0-9]{4}-[0-9]{2}-[0-9]{2}\.' \
+            | while read -r key; do
+                keydate="$(echo "$key" | sed -E 's/grace-portal-([0-9-]{10})\..*/\1/')"
+                if [[ "$keydate" < "$CUTOFF" ]]; then
+                  echo "pruning $key"
+                  aws s3 rm "s3://${R2_BUCKET}/db/${key}" --endpoint-url "$R2_ENDPOINT"
+                fi
+              done
+
+      - name: Report failure loudly
+        if: failure()
+        run: |
+          echo "::error::Nightly backup FAILED. The portal has no point-in-time"
+          echo "::error::recovery on the Supabase free tier, so an unnoticed run"
+          echo "::error::of failures means no recovery path. Investigate today."

@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "grace-portal",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-01",
+  // nodejs_compat is required by the OpenNext adapter and by @supabase/ssr.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    // Public values only. Secrets are set with `wrangler secret put`, never here:
+    // this file is committed.
+    "NEXT_PUBLIC_SITE_URL": "https://portal.thegraceschools.com"
+  }
+}

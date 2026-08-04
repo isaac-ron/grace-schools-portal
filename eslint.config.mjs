@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Cloudflare adapter output. Bundled generated code, tens of thousands of
+    // lines; linting it exhausts the heap and reports nothing actionable.
+    ".open-next/**",
+    ".wrangler/**",
+    // Generated from the database schema by `npm run db:types`.
+    "src/lib/database.types.ts",
   ]),
 ]);
 
