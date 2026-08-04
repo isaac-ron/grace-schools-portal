@@ -7,11 +7,11 @@ export function PageHeader({
 }) {
   return (
     <div className="mb-6">
-      <h1 className="font-display text-2xl font-bold text-balance text-[var(--color-ink)]">
+      <h1 className="font-display text-2xl font-bold text-balance text-ink">
         {title}
       </h1>
       {description && (
-        <p className="mt-1.5 max-w-prose text-sm text-[var(--color-ink-soft)]">
+        <p className="mt-1.5 max-w-prose text-sm text-ink-soft">
           {description}
         </p>
       )}
@@ -31,9 +31,9 @@ export function PhasePlaceholder({
   phase: string;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-[var(--color-line-strong)] bg-white px-6 py-10 text-center">
-      <p className="text-lg font-semibold text-[var(--color-ink)]">{what}</p>
-      <p className="mx-auto mt-1.5 max-w-prose text-sm text-[var(--color-ink-soft)]">
+    <div className="rounded-xl border border-dashed border-line-strong bg-white px-6 py-10 text-center">
+      <p className="text-lg font-semibold text-ink">{what}</p>
+      <p className="mx-auto mt-1.5 max-w-prose text-sm text-ink-soft">
         Built in {phase}. The account system, permissions and database behind it
         are already in place.
       </p>

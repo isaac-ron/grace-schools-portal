@@ -146,6 +146,13 @@ export type Database = {
             foreignKeyName: "assessments_term_id_fkey"
             columns: ["term_id"]
             isOneToOne: false
+            referencedRelation: "attendance_term_summary"
+            referencedColumns: ["term_id"]
+          },
+          {
+            foreignKeyName: "assessments_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
             referencedRelation: "terms"
             referencedColumns: ["id"]
           },
@@ -266,6 +273,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "subjects"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assignments_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_term_summary"
+            referencedColumns: ["term_id"]
           },
           {
             foreignKeyName: "assignments_term_id_fkey"
@@ -770,6 +784,13 @@ export type Database = {
             foreignKeyName: "report_cards_term_id_fkey"
             columns: ["term_id"]
             isOneToOne: false
+            referencedRelation: "attendance_term_summary"
+            referencedColumns: ["term_id"]
+          },
+          {
+            foreignKeyName: "report_cards_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
             referencedRelation: "terms"
             referencedColumns: ["id"]
           },
@@ -1189,6 +1210,44 @@ export type Database = {
       }
     }
     Views: {
+      attendance_term_summary: {
+        Row: {
+          academic_year_id: string | null
+          attendance_rate: number | null
+          class_id: string | null
+          days_absent: number | null
+          days_late: number | null
+          days_present: number | null
+          days_recorded: number | null
+          days_unexplained: number | null
+          student_id: string | null
+          term_id: string | null
+          term_name: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_records_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "terms_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       termly_subject_results: {
         Row: {
           assessment_count: number | null
@@ -1213,6 +1272,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "subjects"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessments_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_term_summary"
+            referencedColumns: ["term_id"]
           },
           {
             foreignKeyName: "assessments_term_id_fkey"
@@ -1255,6 +1321,10 @@ export type Database = {
       results_released_for: {
         Args: { p_student_id: string; p_term_id: string }
         Returns: boolean
+      }
+      save_register: {
+        Args: { p_class_id: string; p_date: string; p_records: Json }
+        Returns: string
       }
       scale_for_assessment: {
         Args: { p_assessment_id: string }

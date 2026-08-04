@@ -217,7 +217,7 @@ export function LinkGuardianForm({
 
   return (
     <form action={action} className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold text-[var(--color-ink)]">Link a guardian</h3>
+      <h3 className="text-sm font-semibold text-ink">Link a guardian</h3>
       <Feedback state={state} />
       <input type="hidden" name="student_id" value={studentId} />
       <div className="grid gap-4 sm:grid-cols-2">

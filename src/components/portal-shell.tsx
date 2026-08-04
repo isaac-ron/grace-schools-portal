@@ -18,7 +18,7 @@ const NAV: Record<UserRole, NavItem[]> = {
   parent: [{ href: "/parent", label: "Home", ready: true }],
   teacher: [
     { href: "/teacher", label: "Today", ready: true },
-    { href: "/teacher/register", label: "Register", ready: false },
+    { href: "/teacher/register", label: "Register", ready: true },
     { href: "/teacher/marks", label: "Marks", ready: false },
     { href: "/teacher/assignments", label: "Assignments", ready: false },
   ],
@@ -27,6 +27,7 @@ const NAV: Record<UserRole, NavItem[]> = {
     { href: "/admin/students", label: "Learners", ready: true },
     { href: "/admin/classes", label: "Classes", ready: true },
     { href: "/admin/accounts", label: "Accounts", ready: true },
+    { href: "/admin/attendance", label: "Attendance", ready: true },
     { href: "/admin/academic-year", label: "Academic year", ready: true },
     { href: "/admin/notices", label: "Notices", ready: true },
     { href: "/admin/fees", label: "Fees", ready: true },
@@ -57,10 +58,10 @@ function NavLinks({ items, layout }: { items: NavItem[]; layout: "side" | "botto
           <Link
             key={item.href}
             href={item.href}
-            className={`${base} text-[var(--color-ink-soft)] transition-colors duration-150
-                        hover:bg-[var(--color-surface-dark)] hover:text-[var(--color-ink)]
+            className={`${base} text-ink-soft transition-colors duration-150
+                        hover:bg-surface-dark hover:text-ink
                         focus-visible:outline-2 focus-visible:outline-offset-2
-                        focus-visible:outline-[var(--color-crimson)]`}
+                        focus-visible:outline-crimson`}
           >
             {item.label}
           </Link>
@@ -69,7 +70,7 @@ function NavLinks({ items, layout }: { items: NavItem[]; layout: "side" | "botto
             key={item.href}
             aria-disabled="true"
             title="Not built yet"
-            className={`${base} cursor-not-allowed text-[var(--color-ink-muted)]`}
+            className={`${base} cursor-not-allowed text-ink-muted`}
           >
             {item.label}
           </span>
@@ -90,17 +91,17 @@ export function PortalShell({
   const isStaff = user.role !== "parent";
 
   return (
-    <div className="min-h-dvh bg-[var(--color-surface)]">
+    <div className="min-h-dvh bg-surface">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50
                    focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-semibold
-                   focus:text-[var(--color-crimson)] focus:outline-2 focus:outline-[var(--color-crimson)]"
+                   focus:text-crimson focus:outline-2 focus:outline-crimson"
       >
         Skip to content
       </a>
 
-      <header className="sticky top-0 z-30 border-b border-[var(--color-crimson-dark)] bg-[var(--color-crimson)]">
+      <header className="sticky top-0 z-30 border-b border-crimson-dark bg-crimson">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
           <Link
             href={`/${user.role}`}
@@ -147,7 +148,7 @@ export function PortalShell({
         <nav
           aria-label="Sections"
           className="fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t
-                     border-[var(--color-line)] bg-white lg:hidden"
+                     border-line bg-white lg:hidden"
         >
           <NavLinks items={items} layout="bottom" />
         </nav>

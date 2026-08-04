@@ -26,9 +26,9 @@ export function StudentFilters({ classes }: { classes: { value: string; label: s
   }
 
   const control =
-    "min-h-[44px] rounded-lg border border-[var(--color-line-strong)] bg-white px-3.5 text-base " +
-    "text-[var(--color-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 " +
-    "focus-visible:outline-[var(--color-crimson)]";
+    "min-h-[44px] rounded-lg border border-line-strong bg-white px-3.5 text-base " +
+    "text-ink focus-visible:outline-2 focus-visible:outline-offset-2 " +
+    "focus-visible:outline-crimson";
 
   return (
     <div className="flex flex-col gap-3">
@@ -36,7 +36,7 @@ export function StudentFilters({ classes }: { classes: { value: string; label: s
         {showingArchived && <input type="hidden" name="archived" value="1" />}
 
         <div className="flex min-w-[14rem] flex-1 flex-col gap-1.5">
-          <label htmlFor="q" className="text-sm font-semibold text-[var(--color-ink)]">
+          <label htmlFor="q" className="text-sm font-semibold text-ink">
             Search
           </label>
           <input
@@ -50,7 +50,7 @@ export function StudentFilters({ classes }: { classes: { value: string; label: s
         </div>
 
         <div className="flex min-w-[12rem] flex-col gap-1.5">
-          <label htmlFor="class" className="text-sm font-semibold text-[var(--color-ink)]">
+          <label htmlFor="class" className="text-sm font-semibold text-ink">
             Class
           </label>
           <select id="class" name="class" defaultValue={params.get("class") ?? ""} className={control}>
@@ -73,7 +73,7 @@ export function StudentFilters({ classes }: { classes: { value: string; label: s
           type="button"
           onClick={toggleArchived}
           disabled={pending}
-          className="min-h-[44px] text-sm font-semibold text-[var(--color-crimson)] underline
+          className="min-h-[44px] text-sm font-semibold text-crimson underline
                      underline-offset-4 disabled:opacity-50"
         >
           {showingArchived ? "Show active learners" : "Show archived learners"}

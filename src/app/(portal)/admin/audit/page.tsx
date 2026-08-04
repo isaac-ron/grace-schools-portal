@@ -150,7 +150,7 @@ export default async function AuditPage({
 
             {totalPages > 1 && (
               <div className="mt-5 flex items-center justify-between gap-4">
-                <p className="text-sm text-[var(--color-ink-soft)]">
+                <p className="text-sm text-ink-soft">
                   Page {pageNum} of {totalPages} ({count} entries)
                 </p>
                 <div className="flex gap-2">
@@ -158,7 +158,7 @@ export default async function AuditPage({
                     <Link
                       href={`/admin/audit?page=${pageNum - 1}`}
                       className="inline-flex min-h-[44px] items-center rounded-lg border
-                                 border-[var(--color-line-strong)] bg-white px-4 text-sm font-semibold"
+                                 border-line-strong bg-white px-4 text-sm font-semibold"
                     >
                       Newer
                     </Link>
@@ -167,7 +167,7 @@ export default async function AuditPage({
                     <Link
                       href={`/admin/audit?page=${pageNum + 1}`}
                       className="inline-flex min-h-[44px] items-center rounded-lg border
-                                 border-[var(--color-line-strong)] bg-white px-4 text-sm font-semibold"
+                                 border-line-strong bg-white px-4 text-sm font-semibold"
                     >
                       Older
                     </Link>

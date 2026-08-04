@@ -61,11 +61,11 @@ export default async function AccountsPage({
                   className={`inline-flex min-h-[44px] items-center rounded-lg border px-4 text-sm font-semibold
                               transition-colors duration-150
                               focus-visible:outline-2 focus-visible:outline-offset-2
-                              focus-visible:outline-[var(--color-crimson)]
+                              focus-visible:outline-crimson
                               ${
                                 active
-                                  ? "border-[var(--color-crimson)] bg-[var(--color-crimson-tint)] text-[var(--color-crimson)]"
-                                  : "border-[var(--color-line-strong)] bg-white text-[var(--color-ink-soft)] hover:bg-[var(--color-surface)]"
+                                  ? "border-crimson bg-crimson-tint text-crimson"
+                                  : "border-line-strong bg-white text-ink-soft hover:bg-surface"
                               }`}
                 >
                   {t.label}
@@ -109,7 +109,7 @@ export default async function AccountsPage({
                     <Td align="right">
                       <Link
                         href={`/admin/accounts/${p.id}`}
-                        className="font-semibold text-[var(--color-crimson)] underline underline-offset-4"
+                        className="font-semibold text-crimson underline underline-offset-4"
                       >
                         Open
                       </Link>

@@ -27,13 +27,13 @@ export function ImportForm() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <p className="text-sm text-[var(--color-ink-soft)]">
+        <p className="text-sm text-ink-soft">
           The file needs these columns:{" "}
-          <code className="rounded bg-[var(--color-surface-dark)] px-1.5 py-0.5 text-[0.8125rem]">
+          <code className="rounded bg-surface-dark px-1.5 py-0.5 text-[0.8125rem]">
             admission_no, first_name, last_name, grade
           </code>
           . Optional:{" "}
-          <code className="rounded bg-[var(--color-surface-dark)] px-1.5 py-0.5 text-[0.8125rem]">
+          <code className="rounded bg-surface-dark px-1.5 py-0.5 text-[0.8125rem]">
             middle_name, stream, gender, date_of_birth
           </code>
           . Grade uses the codes PP1, PP2, G1 to G9.
@@ -42,7 +42,7 @@ export function ImportForm() {
           <a
             href={templateHref()}
             download="grace-learners-template.csv"
-            className="text-sm font-semibold text-[var(--color-crimson)] underline underline-offset-4"
+            className="text-sm font-semibold text-crimson underline underline-offset-4"
           >
             Download a template
           </a>
@@ -55,7 +55,7 @@ export function ImportForm() {
           {state?.ok && <Alert tone="success">{state.ok}</Alert>}
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="file" className="text-sm font-semibold text-[var(--color-ink)]">
+            <label htmlFor="file" className="text-sm font-semibold text-ink">
               Spreadsheet (.csv)
             </label>
             <input
@@ -64,12 +64,12 @@ export function ImportForm() {
               type="file"
               accept=".csv,text/csv"
               required
-              className="min-h-[44px] rounded-lg border border-[var(--color-line-strong)] bg-white
+              className="min-h-[44px] rounded-lg border border-line-strong bg-white
                          px-3.5 py-2.5 text-base file:mr-3 file:rounded-md file:border-0
-                         file:bg-[var(--color-surface-dark)] file:px-3 file:py-2
+                         file:bg-surface-dark file:px-3 file:py-2
                          file:text-sm file:font-semibold
                          focus-visible:outline-2 focus-visible:outline-offset-2
-                         focus-visible:outline-[var(--color-crimson)]"
+                         focus-visible:outline-crimson"
             />
           </div>
 
@@ -86,7 +86,7 @@ export function ImportForm() {
 
       {state?.preview && !done && (
         <div className="flex flex-col gap-4">
-          <h3 className="text-sm font-semibold text-[var(--color-ink)]">
+          <h3 className="text-sm font-semibold text-ink">
             What will happen ({state.preview.length} rows checked, nothing saved yet)
           </h3>
 

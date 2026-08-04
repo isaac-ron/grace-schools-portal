@@ -31,3 +31,11 @@ end;
 $$;
 
 grant usage on schema public to authenticated, anon, service_role;
+
+-- Supabase grants these on a real project. SECURITY INVOKER functions such as
+-- save_register call auth.uid() as the caller, so without this they fail with
+-- "permission denied for schema auth" here but work in production, which is the
+-- worst kind of test-environment difference.
+grant usage on schema auth to authenticated, anon, service_role;
+grant execute on function auth.uid() to authenticated, anon, service_role;
+grant select on auth.users to authenticated, anon, service_role;

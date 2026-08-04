@@ -65,11 +65,11 @@ export default async function ClassDetailPage({
       >
         <Link
           href="/admin/classes"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-[var(--color-line-strong)]
-                     bg-white px-5 text-base font-semibold text-[var(--color-ink)]
-                     transition-colors duration-150 hover:bg-[var(--color-surface)]
+          className="inline-flex min-h-[44px] items-center rounded-lg border border-line-strong
+                     bg-white px-5 text-base font-semibold text-ink
+                     transition-colors duration-150 hover:bg-surface
                      focus-visible:outline-2 focus-visible:outline-offset-2
-                     focus-visible:outline-[var(--color-crimson)]"
+                     focus-visible:outline-crimson"
         >
           All classes
         </Link>
@@ -121,7 +121,7 @@ export default async function ClassDetailPage({
             </TableWrap>
           )}
 
-          <div className="mt-6 border-t border-[var(--color-line)] pt-6">
+          <div className="mt-6 border-t border-line pt-6">
             <AssignSubjectForm
               classId={cls.id}
               teachers={(teachers ?? []).map((t) => ({ value: t.id, label: t.full_name }))}
@@ -138,9 +138,9 @@ export default async function ClassDetailPage({
               action={
                 <Link
                   href="/admin/students"
-                  className="inline-flex min-h-[44px] items-center rounded-lg bg-[var(--color-crimson)]
+                  className="inline-flex min-h-[44px] items-center rounded-lg bg-crimson
                              px-5 font-semibold text-white transition-colors duration-150
-                             hover:bg-[var(--color-crimson-dark)]"
+                             hover:bg-crimson-dark"
                 >
                   Go to Learners
                 </Link>
@@ -162,7 +162,7 @@ export default async function ClassDetailPage({
                     <Td>
                       <Link
                         href={`/admin/students/${s.id}`}
-                        className="font-medium text-[var(--color-crimson)] underline underline-offset-4"
+                        className="font-medium text-crimson underline underline-offset-4"
                       >
                         {s.first_name} {s.last_name}
                       </Link>

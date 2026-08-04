@@ -67,21 +67,21 @@ export default async function StudentsPage({
       >
         <Link
           href="/admin/students/import"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-[var(--color-line-strong)]
-                     bg-white px-5 text-base font-semibold text-[var(--color-ink)]
-                     transition-colors duration-150 hover:bg-[var(--color-surface)]
+          className="inline-flex min-h-[44px] items-center rounded-lg border border-line-strong
+                     bg-white px-5 text-base font-semibold text-ink
+                     transition-colors duration-150 hover:bg-surface
                      focus-visible:outline-2 focus-visible:outline-offset-2
-                     focus-visible:outline-[var(--color-crimson)]"
+                     focus-visible:outline-crimson"
         >
           Import
         </Link>
         <Link
           href="/admin/students/new"
-          className="inline-flex min-h-[44px] items-center rounded-lg bg-[var(--color-crimson)] px-5
+          className="inline-flex min-h-[44px] items-center rounded-lg bg-crimson px-5
                      text-base font-semibold text-white transition-colors duration-150
-                     hover:bg-[var(--color-crimson-dark)]
+                     hover:bg-crimson-dark
                      focus-visible:outline-2 focus-visible:outline-offset-2
-                     focus-visible:outline-[var(--color-crimson)]"
+                     focus-visible:outline-crimson"
         >
           Enrol a learner
         </Link>
@@ -126,7 +126,7 @@ export default async function StudentsPage({
                       <Td>
                         <Link
                           href={`/admin/students/${s.id}`}
-                          className="font-medium text-[var(--color-crimson)] underline underline-offset-4"
+                          className="font-medium text-crimson underline underline-offset-4"
                         >
                           {s.first_name} {s.last_name}
                         </Link>
@@ -148,7 +148,7 @@ export default async function StudentsPage({
         </div>
 
         {rows.length >= 300 && (
-          <p className="mt-4 text-sm text-[var(--color-ink-soft)]">
+          <p className="mt-4 text-sm text-ink-soft">
             Showing the first 300. Narrow the search to see more.
           </p>
         )}

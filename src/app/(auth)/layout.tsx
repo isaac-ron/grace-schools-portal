@@ -2,7 +2,7 @@ import { Wordmark } from "@/components/ui";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex min-h-dvh flex-col bg-[var(--color-surface)]">
+    <main className="flex min-h-dvh flex-col bg-surface">
       <div className="flex flex-1 items-center justify-center px-4 py-10">
         <div className="w-full max-w-md">
           <div className="mb-8 flex flex-col items-center text-center">
@@ -10,19 +10,19 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             {/* Gold as identity, never as an interactive colour. */}
             <span
               aria-hidden
-              className="mt-4 block h-0.5 w-12 rounded-full bg-[var(--color-gold)]"
+              className="mt-4 block h-0.5 w-12 rounded-full bg-gold"
             />
           </div>
           {children}
         </div>
       </div>
 
-      <footer className="px-4 pb-8 text-center text-sm text-[var(--color-ink-soft)]">
+      <footer className="px-4 pb-8 text-center text-sm text-ink-soft">
         Chepilat Town, opposite Summit Hospital
         <br />
         <a
           href="tel:+254720970572"
-          className="mt-1 inline-block min-h-[44px] py-2 font-medium text-[var(--color-crimson)] underline underline-offset-4"
+          className="mt-1 inline-block min-h-[44px] py-2 font-medium text-crimson underline underline-offset-4"
         >
           0720 970 572
         </a>

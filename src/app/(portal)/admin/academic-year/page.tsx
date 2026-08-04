@@ -70,7 +70,7 @@ export default async function AcademicYearPage() {
             </TableWrap>
           )}
 
-          <div className="mt-6 border-t border-[var(--color-line)] pt-6">
+          <div className="mt-6 border-t border-line pt-6">
             <YearForm />
           </div>
         </Panel>
@@ -110,9 +110,9 @@ export default async function AcademicYearPage() {
             </TableWrap>
           )}
 
-          <div className="mt-6 border-t border-[var(--color-line)] pt-6">
+          <div className="mt-6 border-t border-line pt-6">
             {yearOptions.length === 0 ? (
-              <p className="text-sm text-[var(--color-ink-soft)]">
+              <p className="text-sm text-ink-soft">
                 Create an academic year first.
               </p>
             ) : (

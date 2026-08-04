@@ -39,12 +39,12 @@ export default async function AdminHome() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl border border-[var(--color-line)] bg-white p-5"
+            className="rounded-xl border border-line bg-white p-5"
           >
-            <dt className="text-sm font-medium text-[var(--color-ink-soft)]">
+            <dt className="text-sm font-medium text-ink-soft">
               {stat.label}
             </dt>
-            <dd className="mt-1 text-2xl font-bold tabular text-[var(--color-ink)]">
+            <dd className="mt-1 text-2xl font-bold tabular text-ink">
               {stat.value}
             </dd>
           </div>
@@ -52,7 +52,7 @@ export default async function AdminHome() {
       </dl>
 
       {user.canReleaseResults && (
-        <p className="mt-6 text-sm text-[var(--color-ink-soft)]">
+        <p className="mt-6 text-sm text-ink-soft">
           You hold the results release permission. Only you and others with it can
           publish a term&rsquo;s results to parents.
         </p>

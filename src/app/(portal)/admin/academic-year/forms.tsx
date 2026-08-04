@@ -28,7 +28,7 @@ export function YearForm() {
 
   return (
     <form action={action} className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold text-[var(--color-ink)]">Add an academic year</h3>
+      <h3 className="text-sm font-semibold text-ink">Add an academic year</h3>
       <Feedback state={state} />
       <div className="grid gap-4 sm:grid-cols-3">
         <TextInput
@@ -66,7 +66,7 @@ export function TermForm({ years }: { years: { value: string; label: string }[] 
 
   return (
     <form action={action} className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold text-[var(--color-ink)]">Add a term</h3>
+      <h3 className="text-sm font-semibold text-ink">Add a term</h3>
       <Feedback state={state} />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <SelectInput

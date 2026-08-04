@@ -36,12 +36,15 @@ insert into profiles (id, role, full_name, can_release_results) values
   ('55555555-5555-5555-5555-555555555555', 'admin',   'Bursar',    false),
   ('66666666-6666-6666-6666-666666666666', 'admin',   'Headteacher', true);
 
+-- Dates are relative to today so the suite does not rot: attendance is written
+-- with current_date, and a term must contain it for the summary view to apply.
 insert into academic_years (id, name, starts_on, ends_on, is_current) values
-  ('aaaaaaaa-0000-0000-0000-000000000001', '2026', '2026-01-05', '2026-11-27', true);
+  ('aaaaaaaa-0000-0000-0000-000000000001', '2026',
+   current_date - 90, current_date + 90, true);
 
 insert into terms (id, academic_year_id, name, term_number, starts_on, ends_on, is_current) values
   ('bbbbbbbb-0000-0000-0000-000000000001', 'aaaaaaaa-0000-0000-0000-000000000001',
-   'Term 1', 1, '2026-01-05', '2026-04-10', true);
+   'Term 1', 1, current_date - 60, current_date + 30, true);
 
 insert into classes (id, academic_year_id, grade_code, stream, class_teacher_id) values
   ('cccccccc-0000-0000-0000-000000000007', 'aaaaaaaa-0000-0000-0000-000000000001',
@@ -328,6 +331,12 @@ select assert_eq((select count(*)::int from scores), 2,
   'G7 teacher sees marks for their class regardless of release state');
 select assert_eq((select count(*)::int from fee_balances), 0,
   'teachers cannot see family fee balances');
+-- A teacher must not be able to enumerate the school's class structure. This
+-- also keeps the register's class picker honest: it lists exactly what they teach.
+select assert_eq((select count(*)::int from classes), 1,
+  'G7 teacher sees only the classes they teach');
+select assert_eq((select grade_code from classes), 'G7',
+  'and it is the right one');
 reset role;
 
 set role authenticated;
@@ -390,6 +399,117 @@ select assert_eq(
   (select level_code from termly_subject_results
     where student_id = 'eeeeeeee-0000-0000-0000-00000000000c'),
   'ME', 'lower primary termly result aggregates observed levels');
+
+-- =============================================================================
+-- 5b. Attendance
+-- =============================================================================
+
+-- A teacher takes their own class register through the RPC.
+set role authenticated;
+select as_user('33333333-3333-3333-3333-333333333333');   -- G7 teacher
+select save_register(
+  'cccccccc-0000-0000-0000-000000000007',
+  current_date,
+  jsonb_build_array(
+    jsonb_build_object('student_id','eeeeeeee-0000-0000-0000-00000000000a','status','present'),
+    jsonb_build_object('student_id','eeeeeeee-0000-0000-0000-00000000000d','status','absent','reason','sick')
+  )
+);
+select assert_eq((select count(*)::int from attendance_records), 2,
+  'teacher saved a two-learner register');
+select assert_eq(
+  (select reason::text from attendance_records ar
+    join attendance_sessions s on s.id = ar.session_id
+   where ar.student_id = 'eeeeeeee-0000-0000-0000-00000000000d'),
+  'sick', 'absence reason recorded');
+
+-- Re-running the same register must update rather than duplicate: this is what
+-- makes the client-side retry after a dropped connection safe.
+select save_register(
+  'cccccccc-0000-0000-0000-000000000007',
+  current_date,
+  jsonb_build_array(
+    jsonb_build_object('student_id','eeeeeeee-0000-0000-0000-00000000000a','status','late'),
+    jsonb_build_object('student_id','eeeeeeee-0000-0000-0000-00000000000d','status','present')
+  )
+);
+select assert_eq((select count(*)::int from attendance_records), 2,
+  'resaving the register does not duplicate rows');
+select assert_eq(
+  (select status::text from attendance_records
+    where student_id = 'eeeeeeee-0000-0000-0000-00000000000a'),
+  'late', 'resaving the register updates the mark');
+select assert_eq(
+  (select reason from attendance_records
+    where student_id = 'eeeeeeee-0000-0000-0000-00000000000d'),
+  null::absence_reason, 'reason cleared when a learner is no longer absent');
+
+-- Future registers are refused.
+do $$
+begin
+  perform save_register('cccccccc-0000-0000-0000-000000000007', current_date + 1,
+    jsonb_build_array(jsonb_build_object(
+      'student_id','eeeeeeee-0000-0000-0000-00000000000a','status','present')));
+  raise exception 'FAIL: register accepted for a future date';
+exception when others then
+  if sqlerrm like 'FAIL:%' then raise; end if;
+  raise notice 'pass: register refused for a future date';
+end; $$;
+
+-- A learner from another class cannot be slipped into this register.
+do $$
+begin
+  perform save_register('cccccccc-0000-0000-0000-000000000007', current_date,
+    jsonb_build_array(jsonb_build_object(
+      'student_id','eeeeeeee-0000-0000-0000-00000000000b','status','absent','reason','sick')));
+  raise exception 'FAIL: marked a learner outside the class';
+exception when others then
+  if sqlerrm like 'FAIL:%' then raise; end if;
+  raise notice 'pass: cannot mark a learner outside the register''s class';
+end; $$;
+reset role;
+
+-- A teacher must not take a register for someone else's class.
+set role authenticated;
+select as_user('44444444-4444-4444-4444-444444444444');   -- G4/G2 teacher
+do $$
+begin
+  perform save_register('cccccccc-0000-0000-0000-000000000007', current_date,
+    jsonb_build_array(jsonb_build_object(
+      'student_id','eeeeeeee-0000-0000-0000-00000000000a','status','absent','reason','sick')));
+  raise exception 'FAIL: teacher took a register for a class they do not teach';
+exception when others then
+  if sqlerrm like 'FAIL:%' then raise; end if;
+  raise notice 'pass: cannot take a register for another teacher''s class';
+end; $$;
+reset role;
+
+-- Parents see their own child's attendance, and only their own.
+set role authenticated;
+select as_user('11111111-1111-1111-1111-111111111111');   -- Parent A
+select assert_eq((select count(*)::int from attendance_records), 1,
+  'parent sees only their own child''s attendance');
+select assert_eq((select count(*)::int from attendance_term_summary), 1,
+  'parent sees only their own child in the term summary');
+reset role;
+
+set role authenticated;
+select as_user('22222222-2222-2222-2222-222222222222');   -- Parent B, other family
+select assert_eq((select count(*)::int from attendance_records), 0,
+  'parent cannot see another family''s attendance');
+select assert_eq((select count(*)::int from attendance_term_summary), 0,
+  'attendance_term_summary respects RLS (security_invoker)');
+reset role;
+
+-- Attendance rate treats late as attending.
+set role authenticated;
+select as_user('55555555-5555-5555-5555-555555555555');   -- admin
+select assert_eq(
+  (select attendance_rate from attendance_term_summary
+    where student_id = 'eeeeeeee-0000-0000-0000-00000000000a'),
+  100.0::numeric, 'a late learner still counts as attending');
+reset role;
+select as_user('');
 
 -- =============================================================================
 -- 6. Submission rules

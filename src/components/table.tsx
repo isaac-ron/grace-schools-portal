@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 
 export function TableWrap({ children }: { children: ReactNode }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--color-line)] bg-white">
+    <div className="overflow-x-auto rounded-xl border border-line bg-white">
       <table className="w-full min-w-[36rem] border-collapse text-left">{children}</table>
     </div>
   );
@@ -26,8 +26,8 @@ export function Th({
   return (
     <th
       scope="col"
-      className={`border-b border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3
-                  text-sm font-semibold text-[var(--color-ink-soft)] text-${align}`}
+      className={`border-b border-line bg-surface px-4 py-3
+                  text-sm font-semibold text-ink-soft text-${align}`}
     >
       {children}
     </th>
@@ -47,8 +47,8 @@ export function Td({
 }) {
   return (
     <td
-      className={`border-b border-[var(--color-line)] px-4 py-3 text-base text-${align}
-                  ${muted ? "text-[var(--color-ink-soft)]" : "text-[var(--color-ink)]"}
+      className={`border-b border-line px-4 py-3 text-base text-${align}
+                  ${muted ? "text-ink-soft" : "text-ink"}
                   ${numeric ? "tabular" : ""}`}
     >
       {children}
@@ -58,7 +58,7 @@ export function Td({
 
 export function Tr({ children }: { children: ReactNode }) {
   return (
-    <tr className="transition-colors duration-150 last:[&>td]:border-b-0 hover:bg-[var(--color-surface)]">
+    <tr className="transition-colors duration-150 last:[&>td]:border-b-0 hover:bg-surface">
       {children}
     </tr>
   );
@@ -74,11 +74,11 @@ export function Pill({
 }) {
   const tones = {
     neutral:
-      "border-[var(--color-line-strong)] bg-[var(--color-surface)] text-[var(--color-ink-soft)]",
-    ok: "border-[var(--color-ok)] bg-[var(--color-ok-tint)] text-[var(--color-ok)]",
-    warn: "border-[var(--color-warn)] bg-[var(--color-warn-tint)] text-[var(--color-warn)]",
-    alert: "border-[var(--color-alert)] bg-[var(--color-alert-tint)] text-[var(--color-alert)]",
-    info: "border-[var(--color-info)] bg-[var(--color-info-tint)] text-[var(--color-info)]",
+      "border-line-strong bg-surface text-ink-soft",
+    ok: "border-ok bg-ok-tint text-ok",
+    warn: "border-warn bg-warn-tint text-warn",
+    alert: "border-alert bg-alert-tint text-alert",
+    info: "border-info bg-info-tint text-info",
   } as const;
 
   return (
@@ -103,11 +103,11 @@ export function Toolbar({
   return (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
-        <h1 className="font-display text-2xl font-bold text-balance text-[var(--color-ink)]">
+        <h1 className="font-display text-2xl font-bold text-balance text-ink">
           {title}
         </h1>
         {description && (
-          <p className="mt-1.5 max-w-prose text-sm text-[var(--color-ink-soft)]">{description}</p>
+          <p className="mt-1.5 max-w-prose text-sm text-ink-soft">{description}</p>
         )}
       </div>
       {children && <div className="flex shrink-0 flex-wrap gap-2">{children}</div>}
@@ -125,12 +125,12 @@ export function Panel({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-[var(--color-line)] bg-white p-5 sm:p-6">
+    <section className="rounded-xl border border-line bg-white p-5 sm:p-6">
       {title && (
         <div className="mb-5">
-          <h2 className="text-lg font-bold text-[var(--color-ink)]">{title}</h2>
+          <h2 className="text-lg font-bold text-ink">{title}</h2>
           {description && (
-            <p className="mt-1 max-w-prose text-sm text-[var(--color-ink-soft)]">{description}</p>
+            <p className="mt-1 max-w-prose text-sm text-ink-soft">{description}</p>
           )}
         </div>
       )}

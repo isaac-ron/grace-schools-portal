@@ -26,11 +26,11 @@ export default async function SubjectsPage() {
       >
         <Link
           href="/admin/classes"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-[var(--color-line-strong)]
-                     bg-white px-5 text-base font-semibold text-[var(--color-ink)]
-                     transition-colors duration-150 hover:bg-[var(--color-surface)]
+          className="inline-flex min-h-[44px] items-center rounded-lg border border-line-strong
+                     bg-white px-5 text-base font-semibold text-ink
+                     transition-colors duration-150 hover:bg-surface
                      focus-visible:outline-2 focus-visible:outline-offset-2
-                     focus-visible:outline-[var(--color-crimson)]"
+                     focus-visible:outline-crimson"
         >
           Back to classes
         </Link>
@@ -65,7 +65,7 @@ export default async function SubjectsPage() {
           </TableWrap>
         )}
 
-        <div className="mt-6 border-t border-[var(--color-line)] pt-6">
+        <div className="mt-6 border-t border-line pt-6">
           <SubjectForm />
         </div>
       </Panel>

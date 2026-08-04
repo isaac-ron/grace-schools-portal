@@ -46,8 +46,19 @@ Running cost is KES 0. Everything is on a permanent free tier.
 - Year-end promotion
 - Audit log viewer
 
-**Not built yet:** mark entry, registers, assignments, report cards. Those are
-Phases 2 to 5 in the scope document. Nav shows Results greyed out.
+**Phase 2, attendance:**
+
+- Teacher daily register: everyone starts present, only exceptions are tapped
+- Absence reasons (sick, permission, unexplained) and late marking
+- **Resilient submission**: a register marked with no signal is kept on the
+  device and sent automatically when the connection returns
+- Teacher home showing which registers are still outstanding today
+- Parent attendance view: termly rate and a day-by-day record
+- Admin attendance report: register compliance today, per-term rates, and
+  learners below 90% flagged
+
+**Not built yet:** mark entry, assignments, report cards. Those are Phases 3
+to 5 in the scope document. Nav shows Marks, Assignments and Results greyed out.
 
 ## Local setup
 
@@ -143,7 +154,7 @@ values ('<auth user uuid>', 'admin', 'Head Teacher', true, false);
 
 `npm run db:test` is the most important command in this repo.
 
-It spins up a real Postgres, applies every migration, and asserts 70 things
+It spins up a real Postgres, applies every migration, and asserts 86 things
 including:
 
 - A parent sees their own children and no one else's
@@ -156,6 +167,10 @@ including:
 - A parent cannot escalate their own role
 - A guardian cannot grade their own child's work
 - A teacher cannot attach a mark to a learner outside their class
+- A teacher sees only the classes they teach, not the school's class list
+- A teacher cannot take a register for someone else's class
+- Re-saving a register updates rather than duplicating, which is what makes the
+  offline retry safe
 - Every whole percent from 0 to 100 maps to exactly one CBE band on both scales
 - A missing mark yields "not assessed", never Below Expectation
 

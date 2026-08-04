@@ -65,7 +65,7 @@ export function AssignSubjectForm({
 
   return (
     <form action={action} className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold text-[var(--color-ink)]">Assign a subject teacher</h3>
+      <h3 className="text-sm font-semibold text-ink">Assign a subject teacher</h3>
       <Feedback state={state} />
       <input type="hidden" name="class_id" value={classId} />
       <div className="grid gap-4 sm:grid-cols-2">

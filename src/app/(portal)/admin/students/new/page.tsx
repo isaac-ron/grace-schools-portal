@@ -37,9 +37,9 @@ export default async function NewStudentPage() {
       <Toolbar title="Enrol a learner">
         <Link
           href="/admin/students"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-[var(--color-line-strong)]
-                     bg-white px-5 text-base font-semibold text-[var(--color-ink)]
-                     transition-colors duration-150 hover:bg-[var(--color-surface)]"
+          className="inline-flex min-h-[44px] items-center rounded-lg border border-line-strong
+                     bg-white px-5 text-base font-semibold text-ink
+                     transition-colors duration-150 hover:bg-surface"
         >
           Cancel
         </Link>

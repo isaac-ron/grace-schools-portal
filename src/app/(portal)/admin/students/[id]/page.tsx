@@ -95,9 +95,9 @@ export default async function StudentDetailPage({
         {!student.is_active && <Pill>Archived</Pill>}
         <Link
           href="/admin/students"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-[var(--color-line-strong)]
-                     bg-white px-5 text-base font-semibold text-[var(--color-ink)]
-                     transition-colors duration-150 hover:bg-[var(--color-surface)]"
+          className="inline-flex min-h-[44px] items-center rounded-lg border border-line-strong
+                     bg-white px-5 text-base font-semibold text-ink
+                     transition-colors duration-150 hover:bg-surface"
         >
           All learners
         </Link>
@@ -113,7 +113,7 @@ export default async function StudentDetailPage({
           description={year ? `Placement for ${year.name}.` : "No current academic year set."}
         >
           {classOptions.length === 0 ? (
-            <p className="text-sm text-[var(--color-ink-soft)]">
+            <p className="text-sm text-ink-soft">
               No classes exist for the current year.
             </p>
           ) : (
@@ -159,7 +159,7 @@ export default async function StudentDetailPage({
             </TableWrap>
           )}
 
-          <div className="mt-6 border-t border-[var(--color-line)] pt-6">
+          <div className="mt-6 border-t border-line pt-6">
             <LinkGuardianForm studentId={student.id} parents={parentOptions} />
           </div>
         </Panel>

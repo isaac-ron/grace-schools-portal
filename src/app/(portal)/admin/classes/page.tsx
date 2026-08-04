@@ -50,11 +50,11 @@ export default async function ClassesPage() {
       >
         <Link
           href="/admin/classes/subjects"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-[var(--color-line-strong)]
-                     bg-white px-5 text-base font-semibold text-[var(--color-ink)]
-                     transition-colors duration-150 hover:bg-[var(--color-surface)]
+          className="inline-flex min-h-[44px] items-center rounded-lg border border-line-strong
+                     bg-white px-5 text-base font-semibold text-ink
+                     transition-colors duration-150 hover:bg-surface
                      focus-visible:outline-2 focus-visible:outline-offset-2
-                     focus-visible:outline-[var(--color-crimson)]"
+                     focus-visible:outline-crimson"
         >
           Learning areas
         </Link>
@@ -102,7 +102,7 @@ export default async function ClassesPage() {
                       <Td align="right">
                         <Link
                           href={`/admin/classes/${c.id}`}
-                          className="font-semibold text-[var(--color-crimson)] underline underline-offset-4"
+                          className="font-semibold text-crimson underline underline-offset-4"
                         >
                           Open
                         </Link>
@@ -113,7 +113,7 @@ export default async function ClassesPage() {
               </TableWrap>
             )}
 
-            <div className="mt-6 border-t border-[var(--color-line)] pt-6">
+            <div className="mt-6 border-t border-line pt-6">
               <ClassForm
                 yearId={year.id}
                 grades={(grades ?? []).map((g) => ({ value: g.code, label: g.label }))}

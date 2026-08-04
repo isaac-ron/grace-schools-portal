@@ -25,16 +25,16 @@ export function FeeUploadForm() {
         </Alert>
       )}
 
-      <p className="text-sm text-[var(--color-ink-soft)]">
+      <p className="text-sm text-ink-soft">
         Two columns:{" "}
-        <code className="rounded bg-[var(--color-surface-dark)] px-1.5 py-0.5 text-[0.8125rem]">
+        <code className="rounded bg-surface-dark px-1.5 py-0.5 text-[0.8125rem]">
           admission_no, balance
         </code>
         . Amounts may include commas or a currency prefix.{" "}
         <a
           href={`data:text/csv;charset=utf-8,${encodeURIComponent(TEMPLATE)}`}
           download="grace-fee-balances-template.csv"
-          className="font-semibold text-[var(--color-crimson)] underline underline-offset-4"
+          className="font-semibold text-crimson underline underline-offset-4"
         >
           Download a template
         </a>
@@ -42,7 +42,7 @@ export function FeeUploadForm() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="file" className="text-sm font-semibold text-[var(--color-ink)]">
+          <label htmlFor="file" className="text-sm font-semibold text-ink">
             Balances file (.csv)
           </label>
           <input
@@ -51,12 +51,12 @@ export function FeeUploadForm() {
             type="file"
             accept=".csv,text/csv"
             required
-            className="min-h-[44px] rounded-lg border border-[var(--color-line-strong)] bg-white
+            className="min-h-[44px] rounded-lg border border-line-strong bg-white
                        px-3.5 py-2.5 text-base file:mr-3 file:rounded-md file:border-0
-                       file:bg-[var(--color-surface-dark)] file:px-3 file:py-2
+                       file:bg-surface-dark file:px-3 file:py-2
                        file:text-sm file:font-semibold
                        focus-visible:outline-2 focus-visible:outline-offset-2
-                       focus-visible:outline-[var(--color-crimson)]"
+                       focus-visible:outline-crimson"
           />
         </div>
 

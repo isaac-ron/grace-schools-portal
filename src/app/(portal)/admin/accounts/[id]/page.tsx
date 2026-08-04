@@ -51,9 +51,9 @@ export default async function AccountDetailPage({
         {profile.must_change_password && <Pill tone="warn">Must set a password</Pill>}
         <Link
           href="/admin/accounts"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-[var(--color-line-strong)]
-                     bg-white px-5 text-base font-semibold text-[var(--color-ink)]
-                     transition-colors duration-150 hover:bg-[var(--color-surface)]"
+          className="inline-flex min-h-[44px] items-center rounded-lg border border-line-strong
+                     bg-white px-5 text-base font-semibold text-ink
+                     transition-colors duration-150 hover:bg-surface"
         >
           All accounts
         </Link>
@@ -70,7 +70,7 @@ export default async function AccountDetailPage({
             description="This account can see exactly these learners and no others."
           >
             {!children || children.length === 0 ? (
-              <p className="text-sm text-[var(--color-ink-soft)]">
+              <p className="text-sm text-ink-soft">
                 Not linked to any learner yet. Link them from the learner&rsquo;s page.
               </p>
             ) : (
@@ -88,7 +88,7 @@ export default async function AccountDetailPage({
                       <Td>
                         <Link
                           href={`/admin/students/${c.student_id}`}
-                          className="font-medium text-[var(--color-crimson)] underline underline-offset-4"
+                          className="font-medium text-crimson underline underline-offset-4"
                         >
                           {c.students?.first_name} {c.students?.last_name}
                         </Link>
@@ -107,7 +107,7 @@ export default async function AccountDetailPage({
             description="This teacher can see these classes and no others."
           >
             {!assignments || assignments.length === 0 ? (
-              <p className="text-sm text-[var(--color-ink-soft)]">
+              <p className="text-sm text-ink-soft">
                 No classes assigned. Assign them from a class page.
               </p>
             ) : (
@@ -152,7 +152,7 @@ export default async function AccountDetailPage({
           }
         >
           {isSelf ? (
-            <p className="text-sm text-[var(--color-ink-soft)]">
+            <p className="text-sm text-ink-soft">
               You cannot deactivate your own account. Ask another administrator.
             </p>
           ) : (

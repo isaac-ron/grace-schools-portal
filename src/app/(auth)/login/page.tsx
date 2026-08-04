@@ -20,20 +20,20 @@ export default async function LoginPage({
   }
 
   return (
-    <div className="rounded-2xl border border-[var(--color-line)] bg-white p-6 shadow-sm sm:p-8">
-      <h1 className="font-display text-2xl font-bold text-[var(--color-ink)]">Sign in</h1>
-      <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
+    <div className="rounded-2xl border border-line bg-white p-6 shadow-sm sm:p-8">
+      <h1 className="font-display text-2xl font-bold text-ink">Sign in</h1>
+      <p className="mt-2 text-sm text-ink-soft">
         Use the email address or phone number you gave the school office.
       </p>
 
       <LoginForm next={next} />
 
-      <p className="mt-8 border-t border-[var(--color-line)] pt-6 text-sm text-[var(--color-ink-soft)]">
+      <p className="mt-8 border-t border-line pt-6 text-sm text-ink-soft">
         Accounts are created by the school office. If you do not have one yet, or
         you have forgotten your password, call the office on{" "}
         <a
           href="tel:+254720970572"
-          className="font-medium text-[var(--color-crimson)] underline underline-offset-4"
+          className="font-medium text-crimson underline underline-offset-4"
         >
           0720 970 572
         </a>

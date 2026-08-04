@@ -17,15 +17,15 @@ export type ActionState =
   | undefined;
 
 const controlBase =
-  "min-h-[44px] w-full rounded-lg border bg-white px-3.5 text-base text-[var(--color-ink)] " +
+  "min-h-[44px] w-full rounded-lg border bg-white px-3.5 text-base text-ink " +
   "transition-colors duration-150 " +
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-crimson)] " +
-  "disabled:bg-[var(--color-surface)] disabled:cursor-not-allowed";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crimson " +
+  "disabled:bg-surface disabled:cursor-not-allowed";
 
 function borderFor(error?: string) {
   return error
-    ? "border-[var(--color-alert)]"
-    : "border-[var(--color-line-strong)] focus:border-[var(--color-crimson)]";
+    ? "border-alert"
+    : "border-line-strong focus:border-crimson";
 }
 
 function Wrapper({
@@ -45,22 +45,22 @@ function Wrapper({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={name} className="text-sm font-semibold text-[var(--color-ink)]">
+      <label htmlFor={name} className="text-sm font-semibold text-ink">
         {label}
         {required && (
-          <span className="ml-1 text-[var(--color-alert)]" aria-hidden>
+          <span className="ml-1 text-alert" aria-hidden>
             *
           </span>
         )}
       </label>
       {hint && (
-        <p id={`${name}-hint`} className="text-sm text-[var(--color-ink-soft)]">
+        <p id={`${name}-hint`} className="text-sm text-ink-soft">
           {hint}
         </p>
       )}
       {children}
       {error && (
-        <p id={`${name}-error`} className="text-sm font-medium text-[var(--color-alert)]">
+        <p id={`${name}-error`} className="text-sm font-medium text-alert">
           {error}
         </p>
       )}
@@ -170,17 +170,17 @@ export function CheckboxInput({
         id={name}
         name={name}
         type="checkbox"
-        className="mt-0.5 h-5 w-5 shrink-0 rounded border-[var(--color-line-strong)]
-                   accent-[var(--color-crimson)]
+        className="mt-0.5 h-5 w-5 shrink-0 rounded border-line-strong
+                   accent-crimson
                    focus-visible:outline-2 focus-visible:outline-offset-2
-                   focus-visible:outline-[var(--color-crimson)]"
+                   focus-visible:outline-crimson"
         {...props}
       />
       <div className="flex flex-col">
-        <label htmlFor={name} className="text-sm font-semibold text-[var(--color-ink)]">
+        <label htmlFor={name} className="text-sm font-semibold text-ink">
           {label}
         </label>
-        {hint && <p className="text-sm text-[var(--color-ink-soft)]">{hint}</p>}
+        {hint && <p className="text-sm text-ink-soft">{hint}</p>}
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export function ClassForm({
 
   return (
     <form action={action} className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold text-[var(--color-ink)]">Add a class</h3>
+      <h3 className="text-sm font-semibold text-ink">Add a class</h3>
       <Feedback state={state} />
       <input type="hidden" name="academic_year_id" value={yearId} />
       <div className="grid gap-4 sm:grid-cols-3">
@@ -67,7 +67,7 @@ export function SubjectForm() {
 
   return (
     <form action={action} className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold text-[var(--color-ink)]">Add a learning area</h3>
+      <h3 className="text-sm font-semibold text-ink">Add a learning area</h3>
       <Feedback state={state} />
       <div className="grid gap-4 sm:grid-cols-3">
         <TextInput

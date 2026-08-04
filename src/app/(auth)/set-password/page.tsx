@@ -11,11 +11,11 @@ export default async function SetPasswordPage() {
   if (!user) redirect("/login");
 
   return (
-    <div className="rounded-2xl border border-[var(--color-line)] bg-white p-6 shadow-sm sm:p-8">
-      <h1 className="font-display text-2xl font-bold text-[var(--color-ink)]">
+    <div className="rounded-2xl border border-line bg-white p-6 shadow-sm sm:p-8">
+      <h1 className="font-display text-2xl font-bold text-ink">
         Choose a password
       </h1>
-      <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
+      <p className="mt-2 text-sm text-ink-soft">
         Welcome, {user.fullName}. The office gave you a temporary password. Pick
         your own before you continue, and keep it private.
       </p>

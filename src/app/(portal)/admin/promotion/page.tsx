@@ -51,7 +51,7 @@ export default async function PromotionPage() {
 
       <div className="flex flex-col gap-6">
         <Panel title="How this behaves">
-          <ul className="flex list-disc flex-col gap-2 pl-5 text-sm text-[var(--color-ink-soft)]">
+          <ul className="flex list-disc flex-col gap-2 pl-5 text-sm text-ink-soft">
             <li>Grade 9 learners are not promoted. They finish junior school and are left for the office to archive or transfer deliberately.</li>
             <li>Stream is kept when the same stream exists in the new year, otherwise the learner lands in that grade&rsquo;s first class.</li>
             <li>Learners already placed in the destination year are skipped, so running it twice is safe and a partial run can be resumed.</li>
