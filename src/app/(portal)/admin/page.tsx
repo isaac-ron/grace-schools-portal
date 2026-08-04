@@ -35,16 +35,18 @@ export default async function AdminHome() {
         </div>
       )}
 
-      <dl className="grid gap-3 sm:grid-cols-3">
+      {/* A ruled summary, not a row of KPI tiles. PRODUCT.md rules out the
+          dashboard console: this is the school's own standing record, and three
+          numbers do not need three boxes to be read. */}
+      <dl className="grid border-y border-line bg-card sm:grid-cols-3">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl border border-line bg-white p-5"
+            className="border-b border-line p-5 last:border-b-0
+                       sm:border-b-0 sm:border-r sm:last:border-r-0"
           >
-            <dt className="text-sm font-medium text-ink-soft">
-              {stat.label}
-            </dt>
-            <dd className="mt-1 text-2xl font-bold tabular text-ink">
+            <dt className="doc-label">{stat.label}</dt>
+            <dd className="mt-1.5 font-display text-2xl tabular text-ink">
               {stat.value}
             </dd>
           </div>

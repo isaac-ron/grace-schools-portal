@@ -8,10 +8,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="mb-8 flex flex-col items-center text-center">
             <Wordmark />
             {/* Gold as identity, never as an interactive colour. */}
-            <span
-              aria-hidden
-              className="mt-4 block h-0.5 w-12 rounded-full bg-gold"
-            />
+            <span aria-hidden className="mt-4 block h-0.5 w-12 bg-gold" />
           </div>
           {children}
         </div>

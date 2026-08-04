@@ -155,7 +155,7 @@ export function RegisterForm({
         </Alert>
       )}
 
-      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-white p-4">
+      <div className="flex flex-wrap items-center gap-3 border-y border-line bg-card p-4">
         <span className="text-sm font-semibold text-ink">{className}</span>
         <span className="text-sm text-ink-soft tabular">{date}</span>
         <span className="ml-auto flex flex-wrap gap-2">
@@ -165,13 +165,16 @@ export function RegisterForm({
         </span>
       </div>
 
-      <ul className="flex flex-col gap-2">
+      {/* Ruled rather than one card per learner: a register is a single sheet
+          with forty lines on it, and forty boxes is forty times the chrome to
+          scroll past on a phone at 8am. */}
+      <ul className="border-y border-line bg-card">
         {learners.map((l) => {
           const mark = marks[l.id] ?? { status: "present", reason: null };
           return (
             <li
               key={l.id}
-              className="rounded-xl border border-line bg-white p-4"
+              className="border-b border-line p-4 last:border-b-0"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
@@ -251,7 +254,7 @@ export function RegisterForm({
       </ul>
 
       {/* Sticky so a teacher with forty learners never has to scroll to save. */}
-      <div className="sticky bottom-16 z-20 rounded-xl border border-line bg-white p-4 shadow-lg lg:bottom-4">
+      <div className="sticky bottom-16 z-20 rounded-md border border-line bg-card p-4 shadow-lg lg:bottom-4">
         <Button onClick={submit} disabled={state.kind === "saving"} className="w-full">
           {state.kind === "saving" ? "Saving..." : "Save register"}
         </Button>

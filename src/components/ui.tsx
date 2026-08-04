@@ -1,9 +1,14 @@
+import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
 /**
  * Shared primitives. One button shape, one field shape, one badge shape across
  * the whole portal: a control that looks different on two screens means one of
  * them is wrong.
+ *
+ * The system is Crest (see DESIGN.md): document grammar, not app grammar. That
+ * shows up here as near-square corners, hairline rules instead of card borders,
+ * and a serif reserved for titles and document heads.
  *
  * No icon or component library. Page weight is a cost the parent pays in mobile
  * data, so the few icons here are inline SVG.
@@ -20,16 +25,16 @@ function cx(...parts: (string | false | null | undefined)[]) {
 type ButtonVariant = "primary" | "secondary" | "destructive" | "ghost";
 
 const buttonBase =
-  "inline-flex items-center justify-center gap-2 rounded-lg font-semibold " +
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold " +
   "min-h-[44px] px-5 text-base transition-colors duration-150 " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crimson " +
   "disabled:opacity-50 disabled:cursor-not-allowed";
 
 const buttonVariants: Record<ButtonVariant, string> = {
   primary:
-    "bg-crimson text-white hover:bg-crimson-dark active:bg-crimson-dark",
+    "bg-crimson text-white hover:bg-crimson-dark active:bg-crimson-deep",
   secondary:
-    "bg-white text-ink border border-line-strong hover:bg-surface active:bg-surface-dark",
+    "bg-card text-ink border border-line-strong hover:bg-surface active:bg-surface-dark",
   destructive:
     "bg-alert text-white hover:brightness-95 active:brightness-90",
   ghost:
@@ -46,6 +51,26 @@ export function Button({
     <button className={cx(buttonBase, buttonVariants[variant], className)} {...props}>
       {children}
     </button>
+  );
+}
+
+/**
+ * A link that carries a button's weight: "Take register", "Back to learners".
+ *
+ * Shares the shape with Button rather than restating it, because the pattern was
+ * hand-written on a dozen pages and had already drifted. It stays an anchor, so
+ * middle-click and open-in-new-tab keep working.
+ */
+export function LinkButton({
+  variant = "secondary",
+  className,
+  children,
+  ...props
+}: ComponentProps<typeof Link> & { variant?: ButtonVariant }) {
+  return (
+    <Link className={cx(buttonBase, buttonVariants[variant], className)} {...props}>
+      {children}
+    </Link>
   );
 }
 
@@ -85,8 +110,8 @@ export function Field({
         aria-invalid={error ? true : undefined}
         /* 16px minimum: anything smaller triggers zoom-on-focus on mobile. */
         className={cx(
-          "min-h-[44px] rounded-lg border bg-white px-3.5 text-base text-ink",
-          "placeholder:text-ink-soft",
+          "min-h-[44px] rounded-md border bg-card px-3.5 text-base text-ink",
+          "placeholder:text-ink-muted",
           "transition-colors duration-150",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crimson",
           "disabled:bg-surface disabled:cursor-not-allowed",
@@ -127,7 +152,7 @@ export function Alert({
     <div
       role={tone === "error" ? "alert" : "status"}
       className={cx(
-        "rounded-lg border px-4 py-3 text-sm font-medium",
+        "rounded-md border px-4 py-3 text-sm font-medium",
         alertTones[tone],
       )}
     >
@@ -151,12 +176,17 @@ export function Alert({
  *     a document their parents keep.
  */
 export function LevelBadge({ code }: { code: string | null }) {
+  const shape =
+    "inline-flex items-center justify-center rounded-xs border px-2.5 py-1 " +
+    "text-xs font-bold tracking-wide tabular";
+
   if (!code) {
     return (
       <span
-        className="inline-flex items-center rounded-md border px-2 py-1 text-xs font-semibold
-                   border-level-na bg-level-na-tint
-                   text-level-na"
+        className={cx(
+          shape,
+          "border-level-na bg-level-na-tint text-level-na",
+        )}
       >
         Not assessed
       </span>
@@ -178,15 +208,57 @@ export function LevelBadge({ code }: { code: string | null }) {
     be: "border-level-be bg-level-be-tint text-level-be",
   };
 
+  return <span className={cx(shape, tones[family])}>{code}</span>;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Document head                                                               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The head of a record: a titled block closed by the gold rule.
+ *
+ * This is the structural mark of the Crest system. It is what makes a report
+ * card read as a document rather than a screen, and it is reused for any surface
+ * that is a record of something rather than a workspace.
+ */
+export function DocHead({
+  label,
+  title,
+  meta,
+  centered = false,
+}: {
+  label?: string;
+  title: string;
+  meta?: string;
+  centered?: boolean;
+}) {
   return (
-    <span
+    <div
       className={cx(
-        "inline-flex items-center rounded-md border px-2 py-1 text-xs font-semibold tabular",
-        tones[family],
+        "rule-gold pb-4",
+        centered ? "text-center" : "text-left",
       )}
     >
-      {code}
-    </span>
+      {label && <p className="doc-label">{label}</p>}
+      <h1 className={cx("font-display text-2xl text-balance text-ink", label && "mt-1.5")}>
+        {title}
+      </h1>
+      {meta && <p className="mt-1.5 text-sm text-ink-soft">{meta}</p>}
+    </div>
+  );
+}
+
+/**
+ * A labelled value from a record: learner, class, admission number.
+ * Document grammar, so the label is small caps above the value, never beside it.
+ */
+export function DocField({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div>
+      <p className="doc-label">{label}</p>
+      <p className="mt-1 text-base text-ink">{children}</p>
+    </div>
   );
 }
 
@@ -205,8 +277,8 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-line-strong bg-white px-6 py-10 text-center">
-      <p className="text-lg font-semibold text-ink">{title}</p>
+    <div className="border-y border-line bg-card px-6 py-12 text-center">
+      <p className="font-display text-lg text-ink">{title}</p>
       <p className="mx-auto mt-1.5 max-w-prose text-sm text-ink-soft">
         {description}
       </p>
@@ -219,13 +291,13 @@ export function EmptyState({
 /* Wordmark                                                                    */
 /* -------------------------------------------------------------------------- */
 
-/** The one place Playfair appears. Identity, never a control. */
+/** The one place the serif appears in the chrome. Identity, never a control. */
 export function Wordmark({ subdued = false }: { subdued?: boolean }) {
   return (
     <span className="inline-flex flex-col leading-none">
       <span
         className={cx(
-          "font-display text-lg font-bold tracking-tight",
+          "font-display text-lg",
           subdued ? "text-white" : "text-crimson",
         )}
       >
@@ -233,8 +305,8 @@ export function Wordmark({ subdued = false }: { subdued?: boolean }) {
       </span>
       <span
         className={cx(
-          "mt-1 text-[0.6875rem] font-semibold uppercase tracking-[0.18em]",
-          subdued ? "text-white/70" : "text-ink-muted",
+          "mt-1.5 text-[0.625rem] font-bold uppercase tracking-[0.22em]",
+          subdued ? "text-gold" : "text-ink-muted",
         )}
       >
         Portal

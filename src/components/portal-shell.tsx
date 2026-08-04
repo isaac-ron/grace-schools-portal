@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signOut } from "@/app/(auth)/actions";
 import { Wordmark } from "@/components/ui";
+import { NavLinks, type NavItem } from "@/components/portal-nav";
 import type { SessionUser, UserRole } from "@/lib/dal";
 
 /**
@@ -10,9 +11,12 @@ import type { SessionUser, UserRole } from "@/lib/dal";
  * one destination, and a sidebar would be navigation for its own sake. Staff get
  * a sidebar on laptops and a bottom bar on phones, because they move between
  * registers, marks and classes constantly.
+ *
+ * The masthead is the deep crimson field closed by a gold rule. That pairing is
+ * the structural mark of the Crest system and it repeats at the head of every
+ * record inside the app, which is what ties a page to the school rather than to
+ * a product.
  */
-
-type NavItem = { href: string; label: string; ready: boolean };
 
 const NAV: Record<UserRole, NavItem[]> = {
   parent: [{ href: "/parent", label: "Home", ready: true }],
@@ -43,43 +47,6 @@ const ROLE_LABEL: Record<UserRole, string> = {
   admin: "Administration",
 };
 
-function NavLinks({ items, layout }: { items: NavItem[]; layout: "side" | "bottom" }) {
-  const base =
-    layout === "side"
-      ? "flex items-center rounded-lg px-3 py-2.5 text-sm font-medium min-h-[44px]"
-      : // Fixed width plus a scrolling parent: admin has ten sections, and
-        // squeezing them into one screen width makes every label unreadable.
-        "flex shrink-0 items-center justify-center whitespace-nowrap px-4 text-sm font-medium min-h-[56px]";
-
-  return (
-    <>
-      {items.map((item) =>
-        item.ready ? (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`${base} text-ink-soft transition-colors duration-150
-                        hover:bg-surface-dark hover:text-ink
-                        focus-visible:outline-2 focus-visible:outline-offset-2
-                        focus-visible:outline-crimson`}
-          >
-            {item.label}
-          </Link>
-        ) : (
-          <span
-            key={item.href}
-            aria-disabled="true"
-            title="Not built yet"
-            className={`${base} cursor-not-allowed text-ink-muted`}
-          >
-            {item.label}
-          </span>
-        ),
-      )}
-    </>
-  );
-}
-
 export function PortalShell({
   user,
   children,
@@ -95,17 +62,17 @@ export function PortalShell({
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50
-                   focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-semibold
+                   focus:rounded-md focus:bg-card focus:px-4 focus:py-2 focus:font-semibold
                    focus:text-crimson focus:outline-2 focus:outline-crimson"
       >
         Skip to content
       </a>
 
-      <header className="sticky top-0 z-30 border-b border-crimson-dark bg-crimson">
+      <header className="no-print sticky top-0 z-30 border-b-2 border-gold bg-crimson-deep">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
           <Link
             href={`/${user.role}`}
-            className="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            className="rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
             <Wordmark subdued />
           </Link>
@@ -113,12 +80,12 @@ export function PortalShell({
           <div className="flex items-center gap-3">
             <span className="hidden text-right text-sm leading-tight text-white sm:block">
               <span className="block font-semibold">{user.fullName}</span>
-              <span className="block text-white/70">{ROLE_LABEL[user.role]}</span>
+              <span className="block text-white/75">{ROLE_LABEL[user.role]}</span>
             </span>
             <form action={signOut}>
               <button
                 type="submit"
-                className="min-h-[44px] rounded-lg border border-white/30 px-4 text-sm font-semibold
+                className="min-h-[44px] rounded-md border border-white/35 px-4 text-sm font-semibold
                            text-white transition-colors duration-150 hover:bg-white/10
                            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
@@ -133,7 +100,7 @@ export function PortalShell({
         {isStaff && (
           <nav
             aria-label="Sections"
-            className="hidden w-56 shrink-0 flex-col gap-1 lg:flex"
+            className="no-print hidden w-56 shrink-0 flex-col gap-0.5 lg:flex"
           >
             <NavLinks items={items} layout="side" />
           </nav>
@@ -147,8 +114,8 @@ export function PortalShell({
       {isStaff && (
         <nav
           aria-label="Sections"
-          className="fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t
-                     border-line bg-white lg:hidden"
+          className="no-print fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t
+                     border-line bg-card lg:hidden"
         >
           <NavLinks items={items} layout="bottom" />
         </nav>

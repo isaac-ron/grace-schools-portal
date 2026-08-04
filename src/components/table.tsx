@@ -6,11 +6,25 @@ import type { ReactNode } from "react";
  * Wide content scrolls inside its own container so the page body never scrolls
  * sideways, which is the difference between usable and useless when an admin
  * opens a class list on a phone.
+ *
+ * Under Crest a table is a ruled record, not a card: hairlines between rows,
+ * a rule above and below the whole thing, and no box drawn around it.
  */
+
+/* Alignment has to resolve to a literal class name. Building it as `text-${align}`
+   leaves Tailwind's scanner nothing to find, so the utility only exists as long as
+   some unrelated file happens to use it. */
+const alignments = {
+  left: "text-left",
+  right: "text-right",
+  center: "text-center",
+} as const;
+
+type Align = keyof typeof alignments;
 
 export function TableWrap({ children }: { children: ReactNode }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-line bg-white">
+    <div className="overflow-x-auto border-y border-line bg-card">
       <table className="w-full min-w-[36rem] border-collapse text-left">{children}</table>
     </div>
   );
@@ -21,13 +35,12 @@ export function Th({
   align = "left",
 }: {
   children: ReactNode;
-  align?: "left" | "right" | "center";
+  align?: Align;
 }) {
   return (
     <th
       scope="col"
-      className={`border-b border-line bg-surface px-4 py-3
-                  text-sm font-semibold text-ink-soft text-${align}`}
+      className={`doc-label border-b border-line bg-surface px-4 py-3 ${alignments[align]}`}
     >
       {children}
     </th>
@@ -41,13 +54,13 @@ export function Td({
   numeric = false,
 }: {
   children: ReactNode;
-  align?: "left" | "right" | "center";
+  align?: Align;
   muted?: boolean;
   numeric?: boolean;
 }) {
   return (
     <td
-      className={`border-b border-line px-4 py-3 text-base text-${align}
+      className={`border-b border-line px-4 py-3 text-base ${alignments[align]}
                   ${muted ? "text-ink-soft" : "text-ink"}
                   ${numeric ? "tabular" : ""}`}
     >
@@ -73,8 +86,7 @@ export function Pill({
   tone?: "neutral" | "ok" | "warn" | "alert" | "info";
 }) {
   const tones = {
-    neutral:
-      "border-line-strong bg-surface text-ink-soft",
+    neutral: "border-line-strong bg-surface text-ink-soft",
     ok: "border-ok bg-ok-tint text-ok",
     warn: "border-warn bg-warn-tint text-warn",
     alert: "border-alert bg-alert-tint text-alert",
@@ -83,7 +95,7 @@ export function Pill({
 
   return (
     <span
-      className={`inline-flex items-center rounded-md border px-2 py-1 text-xs font-semibold ${tones[tone]}`}
+      className={`inline-flex items-center rounded-xs border px-2.5 py-1 text-xs font-bold tracking-wide ${tones[tone]}`}
     >
       {children}
     </span>
@@ -101,11 +113,9 @@ export function Toolbar({
   children?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div className="rule-gold mb-6 flex flex-col gap-4 pb-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="font-display text-2xl font-bold text-balance text-ink">
-          {title}
-        </h1>
+        <h1 className="font-display text-2xl text-balance text-ink">{title}</h1>
         {description && (
           <p className="mt-1.5 max-w-prose text-sm text-ink-soft">{description}</p>
         )}
@@ -115,6 +125,13 @@ export function Toolbar({
   );
 }
 
+/**
+ * A section of a record.
+ *
+ * Ruled, not boxed. Cards stacked inside a page were the old default and they
+ * made every screen read as a dashboard; a school record reads as a document
+ * with sections, so the section announces itself with a heading and a hairline.
+ */
 export function Panel({
   title,
   description,
@@ -125,10 +142,10 @@ export function Panel({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-line bg-white p-5 sm:p-6">
+    <section className="border-y border-line bg-card p-5 sm:p-6">
       {title && (
-        <div className="mb-5">
-          <h2 className="text-lg font-bold text-ink">{title}</h2>
+        <div className="mb-5 border-b border-line pb-3">
+          <h2 className="font-display text-lg text-ink">{title}</h2>
           {description && (
             <p className="mt-1 max-w-prose text-sm text-ink-soft">{description}</p>
           )}

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { requireRole } from "@/lib/dal";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader } from "@/components/page-header";
-import { EmptyState } from "@/components/ui";
+import { EmptyState, LinkButton } from "@/components/ui";
 import { Pill } from "@/components/table";
 import { PendingRegisterNotice } from "./pending-notice";
 
@@ -62,7 +61,9 @@ export default async function TeacherHome() {
           description="Administration assigns classes and subjects. Once that is done, your registers and mark sheets appear here."
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        // One ruled block, one row per class. This is a morning checklist, and a
+        // list of separate cards reads slower than a list of ruled rows.
+        <ul className="border-y border-line bg-card">
           {sorted.map((cls) => {
             const taken = takenToday.get(cls.id);
             const label = `${cls.grade_levels?.label ?? cls.grade_code}${cls.stream ? ` ${cls.stream}` : ""}`;
@@ -71,11 +72,11 @@ export default async function TeacherHome() {
             return (
               <li
                 key={cls.id}
-                className="flex flex-col gap-4 rounded-xl border border-line
-                           bg-white p-5 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-4 border-b border-line p-5 last:border-b-0
+                           sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <p className="text-lg font-semibold text-ink">{label}</p>
+                  <p className="font-display text-lg text-ink">{label}</p>
                   <p className="mt-0.5 text-sm text-ink-soft">
                     {count} learner{count === 1 ? "" : "s"}
                   </p>
@@ -94,20 +95,12 @@ export default async function TeacherHome() {
                     <Pill tone="warn">Not taken</Pill>
                   )}
 
-                  <Link
+                  <LinkButton
                     href={`/teacher/register?class=${cls.id}`}
-                    className={`inline-flex min-h-[44px] items-center rounded-lg px-5 text-base font-semibold
-                                transition-colors duration-150
-                                focus-visible:outline-2 focus-visible:outline-offset-2
-                                focus-visible:outline-crimson
-                                ${
-                                  taken
-                                    ? "border border-line-strong bg-white text-ink hover:bg-surface"
-                                    : "bg-crimson text-white hover:bg-crimson-dark"
-                                }`}
+                    variant={taken ? "secondary" : "primary"}
                   >
                     {taken ? "View register" : "Take register"}
-                  </Link>
+                  </LinkButton>
                 </div>
               </li>
             );

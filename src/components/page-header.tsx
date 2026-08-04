@@ -1,3 +1,8 @@
+/**
+ * The head of a page, closed by the gold rule that structures the Crest system.
+ * Toolbar in `table.tsx` is the same head with an action slot; this is the plain
+ * one, for pages that carry no page-level action.
+ */
 export function PageHeader({
   title,
   description,
@@ -6,10 +11,8 @@ export function PageHeader({
   description?: string;
 }) {
   return (
-    <div className="mb-6">
-      <h1 className="font-display text-2xl font-bold text-balance text-ink">
-        {title}
-      </h1>
+    <div className="rule-gold mb-6 pb-4">
+      <h1 className="font-display text-2xl text-balance text-ink">{title}</h1>
       {description && (
         <p className="mt-1.5 max-w-prose text-sm text-ink-soft">
           {description}
@@ -31,8 +34,8 @@ export function PhasePlaceholder({
   phase: string;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-line-strong bg-white px-6 py-10 text-center">
-      <p className="text-lg font-semibold text-ink">{what}</p>
+    <div className="border-y border-line bg-card px-6 py-12 text-center">
+      <p className="font-display text-lg text-ink">{what}</p>
       <p className="mx-auto mt-1.5 max-w-prose text-sm text-ink-soft">
         Built in {phase}. The account system, permissions and database behind it
         are already in place.

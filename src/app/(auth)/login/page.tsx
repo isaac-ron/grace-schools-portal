@@ -20,8 +20,8 @@ export default async function LoginPage({
   }
 
   return (
-    <div className="rounded-2xl border border-line bg-white p-6 shadow-sm sm:p-8">
-      <h1 className="font-display text-2xl font-bold text-ink">Sign in</h1>
+    <div className="border border-t-2 border-line border-t-gold bg-card p-6 sm:p-8">
+      <h1 className="font-display text-2xl text-ink">Sign in</h1>
       <p className="mt-2 text-sm text-ink-soft">
         Use the email address or phone number you gave the school office.
       </p>

@@ -1,58 +1,86 @@
 @import "tailwindcss";
-@import "@fontsource-variable/playfair-display";
+@import "@fontsource-variable/source-serif-4";
 @import "@fontsource-variable/inter";
 
+/* ============================================================================
+   Crest.
+
+   The portal's most important output is a report card a parent keeps, so the
+   whole system is built from document grammar rather than app grammar: warm
+   paper instead of cool slate, hairline rules instead of card borders, a gold
+   rule as the structural mark, and an old-style serif reserved for titles and
+   document heads. See DESIGN.md.
+
+   Every colour pair the portal renders is contrast-checked. Values here are the
+   verified ones; changing a token means re-checking the pair it appears in.
+   ========================================================================= */
+
 @theme {
-  /* Brand, carried from the marketing site so the portal reads as the same school */
+  /* --- Brand. The crimson and gold are taken from the crest and do not move. */
   --color-crimson: #8b1a1a;
   --color-crimson-dark: #6b0f0f;
   --color-crimson-light: #a82828;
-  --color-crimson-tint: #fdf2f2;
+  /* The drenched field: mastheads, document heads, the released-results stamp.
+     Deep enough that gold reads as a rule on it rather than a smudge. */
+  --color-crimson-deep: #4a0b0b;
+  --color-crimson-tint: #fbf4f1;
   --color-gold: #d4a017;
   --color-gold-light: #f0c030;
-  --color-blue-accent: #4a7db5;
+  --color-blue-accent: #43678f;
   --color-blue-accent-light: #8fb4dd;
 
-  /* Surfaces */
-  --color-surface: #f8fafc;
-  --color-surface-dark: #e2e8f0;
+  /* --- Surfaces. Warm paper, not cool slate. The page is a document. */
+  --color-surface: #fbfaf8;
+  --color-surface-dark: #f0ede7;
   --color-card: #ffffff;
-  --color-line: #e2e8f0;
-  --color-line-strong: #cbd5e1;
+  /* Hairline: separates rows and sections. Decorative, deliberately faint. */
+  --color-line: #e3ded5;
+  /* Control boundary: input, select, secondary button. Carries 3:1 against both
+     paper and card because WCAG 1.4.11 applies to the edge of a control, and
+     the old slate value failed it at 1.6:1. */
+  --color-line-strong: #8f8574;
 
-  /* Text */
-  --color-ink: #0f172a;
-  --color-ink-soft: #475569;
-  --color-ink-muted: #94a3b8;
+  /* --- Text. Warm near-black, matched to the paper. */
+  --color-ink: #1a1614;
+  --color-ink-soft: #55504a;
+  --color-ink-muted: #756c5f;
 
-  /* Status, used for attendance, release state and submission state */
-  --color-ok: #047857;
-  --color-ok-tint: #ecfdf5;
-  --color-warn: #b45309;
-  --color-warn-tint: #fffbeb;
-  --color-alert: #be123c;
-  --color-alert-tint: #fff1f2;
+  /* --- State. Warmed to sit on paper without reading as a foreign UI. */
+  --color-ok: #0d6b4e;
+  --color-ok-tint: #edf7f1;
+  --color-warn: #8a5206;
+  --color-warn-tint: #fbf5e9;
+  --color-alert: #a81b38;
+  --color-alert-tint: #fcf1f0;
   --color-info: #1d4ed8;
-  --color-info-tint: #eff6ff;
+  --color-info-tint: #eff3fc;
 
-  /* CBE performance levels.
+  /* --- CBE performance levels.
      Deliberately not a red-to-green "ranking" ramp: CBE removes class ranking
      by design, so Below Expectation is a muted rose rather than an alarm red.
      Colour is never the only signal, the level code always appears as text. */
-  --color-level-ee: #047857;
-  --color-level-ee-tint: #ecfdf5;
-  --color-level-me: #1d4ed8;
-  --color-level-me-tint: #eff6ff;
-  --color-level-ae: #b45309;
-  --color-level-ae-tint: #fffbeb;
-  --color-level-be: #9f1239;
-  --color-level-be-tint: #fff1f2;
+  --color-level-ee: #046b4e;
+  --color-level-ee-tint: #edf7f1;
+  --color-level-me: #1b4ca8;
+  --color-level-me-tint: #eff3fc;
+  --color-level-ae: #8a5206;
+  --color-level-ae-tint: #fbf5e9;
+  --color-level-be: #8e2340;
+  --color-level-be-tint: #fbf1f1;
   /* Not assessed / absent. Distinct from Below Expectation by design: a learner
      who missed an assessment must never be recorded as the bottom grade. */
-  --color-level-na: #64748b;
-  --color-level-na-tint: #f1f5f9;
+  --color-level-na: #5f5850;
+  --color-level-na-tint: #f2efe9;
 
-  --font-heading: "Playfair Display Variable", Georgia, serif;
+  /* --- Radius. A document has corners. Retuning the scale here de-rounds every
+     existing screen at once, since they all use rounded-lg through this token. */
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+
+  --font-heading: "Source Serif 4 Variable", "Iowan Old Style", Georgia, serif;
   --font-body: "Inter Variable", system-ui, sans-serif;
 }
 
@@ -75,10 +103,29 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Playfair is used for page titles and brand moments only. Functional UI
-   (tables, forms, labels, numbers) stays in Inter for legibility. */
+/* Source Serif 4 is used for page titles, document heads and the wordmark.
+   Functional UI (tables, forms, labels, numbers) stays in Inter for legibility
+   at small sizes on a cheap screen. */
 .font-display {
   font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+/* The document label: field captions on a report card, column groups, the
+   "Learner / Class / Admission no." row. Used where a form actually labels a
+   value, never as a decorative eyebrow above a section heading. */
+.doc-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* The structural mark of the system: a gold rule closing a document head. */
+.rule-gold {
+  border-bottom: 1px solid var(--color-gold);
 }
 
 /* Tabular figures for marks, percentages and attendance counts so columns
@@ -95,5 +142,17 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  /* A released report card is meant to be kept. Printing it should produce a
+     document, not a screenshot of an interface. */
+  body {
+    background: #fff;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }

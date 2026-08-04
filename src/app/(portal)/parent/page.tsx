@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { requireRole } from "@/lib/dal";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader } from "@/components/page-header";
-import { EmptyState } from "@/components/ui";
+import { EmptyState, LinkButton } from "@/components/ui";
 import { Panel, Pill } from "@/components/table";
 
 export const metadata: Metadata = { title: "Home" };
@@ -51,18 +50,20 @@ export default async function ParentHome() {
         />
       ) : (
         <div className="flex flex-col gap-6">
-          <ul className="flex flex-col gap-3">
+          {/* One ruled block, one row per child. Cards per child made two
+              siblings look like two unrelated systems. */}
+          <ul className="border-y border-line bg-card">
             {children.map((child) => {
               const cls = child.enrollments?.[0]?.classes;
               const att = byStudent.get(child.id);
               return (
                 <li
                   key={child.id}
-                  className="rounded-xl border border-line bg-white p-5"
+                  className="border-b border-line p-5 last:border-b-0"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <p className="text-lg font-semibold text-ink">
+                      <p className="font-display text-lg text-ink">
                         {child.first_name} {child.last_name}
                       </p>
                       <p className="mt-0.5 text-sm text-ink-soft">
@@ -87,17 +88,9 @@ export default async function ParentHome() {
                   )}
 
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <Link
-                      href={`/parent/child/${child.id}/attendance`}
-                      className="inline-flex min-h-[44px] items-center rounded-lg border
-                                 border-line-strong bg-white px-5 text-base font-semibold
-                                 text-ink transition-colors duration-150
-                                 hover:bg-surface
-                                 focus-visible:outline-2 focus-visible:outline-offset-2
-                                 focus-visible:outline-crimson"
-                    >
+                    <LinkButton href={`/parent/child/${child.id}/attendance`}>
                       Attendance
-                    </Link>
+                    </LinkButton>
                   </div>
                 </li>
               );
