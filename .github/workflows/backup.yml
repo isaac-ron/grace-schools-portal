@@ -34,12 +34,21 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends postgresql-client-17
 
+          # The runner image ships a PostgreSQL 16 client at /usr/bin/pg_dump,
+          # which shadows the 17 client PGDG installs into a versioned path.
+          # pg_dump refuses to dump a server newer than itself, so without this
+          # the job fails on version mismatch against Supabase's 17.6.
+          echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
+
       - name: Dump and encrypt
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
         run: |
           set -euo pipefail
+          # Recorded in the log so a future version mismatch is one glance to
+          # diagnose rather than a puzzle about which client was on PATH.
+          pg_dump --version
           STAMP="$(date -u +%Y-%m-%d)"
           echo "BACKUP_FILE=grace-portal-${STAMP}.sql.gz.gpg" >> "$GITHUB_ENV"
 
