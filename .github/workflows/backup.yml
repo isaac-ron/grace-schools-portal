@@ -54,37 +54,28 @@ jobs:
 
           ls -lh "grace-portal-${STAMP}.sql.gz.gpg"
 
-      - name: Upload to Cloudflare R2
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
-          R2_BUCKET: ${{ secrets.R2_BUCKET }}
-        run: |
-          set -euo pipefail
-          aws s3 cp "$BACKUP_FILE" "s3://${R2_BUCKET}/db/${BACKUP_FILE}" \
-            --endpoint-url "$R2_ENDPOINT"
-
-      - name: Prune backups older than 30 days
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
-          R2_BUCKET: ${{ secrets.R2_BUCKET }}
-        run: |
-          set -euo pipefail
-          CUTOFF="$(date -u -d '30 days ago' +%Y-%m-%d)"
-          aws s3 ls "s3://${R2_BUCKET}/db/" --endpoint-url "$R2_ENDPOINT" \
-            | awk '{print $4}' | grep -E '^grace-portal-[0-9]{4}-[0-9]{2}-[0-9]{2}\.' \
-            | while read -r key; do
-                keydate="$(echo "$key" | sed -E 's/grace-portal-([0-9-]{10})\..*/\1/')"
-                if [[ "$keydate" < "$CUTOFF" ]]; then
-                  echo "pruning $key"
-                  aws s3 rm "s3://${R2_BUCKET}/db/${key}" --endpoint-url "$R2_ENDPOINT"
-                fi
-              done
+      # INTERIM STORAGE. This is a bridge, not the destination.
+      #
+      # The dump belongs on infrastructure unrelated to the thing it protects,
+      # and an artifact lives on the same GitHub account that runs this job. It
+      # is off Supabase, which is what matters most, and it needs no card and no
+      # new provider, so it beats the status quo of no backups at all.
+      #
+      # Replace with an scp to /srv/backups/db on the VPS once that box exists.
+      # Retention then moves to a `find -mtime` on the server and this 90-day
+      # ceiling stops applying.
+      - name: Upload as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BACKUP_FILE }}
+          path: ${{ env.BACKUP_FILE }}
+          # 90 is the maximum GitHub allows, and retention is what makes this a
+          # backup rather than a copy of last night.
+          retention-days: 90
+          # The payload is already gzipped and encrypted, so re-compressing it
+          # only burns runner time for nothing.
+          compression-level: 0
+          if-no-files-found: error
 
       - name: Report failure loudly
         if: failure()
