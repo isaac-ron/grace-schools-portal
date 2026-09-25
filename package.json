@@ -11,6 +11,7 @@
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare deploy",
     "db:test": "bash scripts/db-test.sh",
+    "db:restore-drill": "bash scripts/restore-drill.sh",
     "db:types": "supabase gen types typescript --linked --schema public > src/lib/database.types.ts",
     "db:seed": "node scripts/seed.mjs",
     "db:seed:reset": "node scripts/seed.mjs --reset",
